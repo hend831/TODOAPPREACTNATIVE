@@ -11,6 +11,7 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  Platform ,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -66,6 +67,8 @@ const Home = () => {
     }
   };
 
+
+  
   // Filter completed tasks
   const filteredCompletedTasks = Array.isArray(completedTasks) ? completedTasks.filter((task) => task.done) : [];
 
@@ -90,7 +93,19 @@ const Home = () => {
       console.error('Error saving todos to AsyncStorage:', error);
     }
   };
+  const handleDelete = (updatedTodos) => {
+    // Update the state with the updated todos
+    setTodos(updatedTodos);
+  };
 
+  const touchableStyle = Platform.select({
+    ios: {
+      backgroundColor: '#074a03', // Set red background for iOS
+    },
+    android: {
+      backgroundColor: 'yellow', // Set black background for Android
+    },
+  });
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}
          
@@ -121,13 +136,13 @@ const Home = () => {
               placeholder="Description"
               value={description}
             />
-            <TouchableOpacity style={styles.button} onPress={addTodo}>
-              <Text style={{ color: '#fff', fontSize: 20 }}>Add</Text>
+            <TouchableOpacity style={[styles.button,touchableStyle]} onPress={addTodo}>
+              <Text style={{ color: '#fff', fontSize: 20 }}    >Add</Text>
             </TouchableOpacity>
             {todos.length !== 0 && (
               <>
                 <View style={styles.divider} />
-                <Todos todos={todos} onToggleDone={toggleDone} addCompletedTask={setCompletedTasks} />
+                <Todos todos={todos} onToggleDone={toggleDone} addCompletedTask={setCompletedTasks} onDelete={handleDelete} />
               </>
             )}
     
